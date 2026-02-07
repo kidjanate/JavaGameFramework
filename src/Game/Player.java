@@ -1,10 +1,9 @@
 package Game;
 
-import java.awt.event.KeyEvent;
-
 import Instances.Camera;
 import Instances.Sprite;
 import Valuables.Vector2;
+import java.awt.event.KeyEvent;
 
 public class Player extends Sprite {
     float PlayerSpeed = 5;
@@ -35,7 +34,7 @@ public class Player extends Sprite {
             position.Y += deltaTime * PlayerSpeed;
         }
 
-        camera.position = Vector2.Lerp(camera.position, position, 0.05 * deltaTime);
+        camera.position = Vector2.Lerp(camera.position, position, 0.1 * deltaTime);
         System.out.println(camera.position);
     }
 }
