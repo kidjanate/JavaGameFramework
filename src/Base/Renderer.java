@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 import Instances.GameObject;
-import Instances.Instance;
 import Valuables.Vector2;
 
 public class Renderer {
@@ -20,7 +19,7 @@ public class Renderer {
     Input input;
     Vector2 size = new Vector2(512, 512);
     String title = "Example";
-    int TargetFPS = 60;
+    int TargetFPS = 300;
 
     Scene currentScene;
 
@@ -93,7 +92,7 @@ public class Renderer {
             g2.translate(-scene.currentCamera.position.X, -scene.currentCamera.position.Y);
         }
 
-        g2.setColor(Color.BLACK); 
+        g2.setColor(Color.WHITE); 
         g2.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         for (GameObject obj : scene.gameObjects){
@@ -107,44 +106,26 @@ public class Renderer {
     }
 
     void Loop() {
-        double drawInterval = 1000000000.0 / TargetFPS; // Use double!
-        double delta = 0;
         long lastTime = System.nanoTime();
-        long currentTime;
         
-        long timer = 0;
-        int drawCount = 0;
-
         while (window.isVisible()) {
-            currentTime = System.nanoTime();
-            
-            delta += (currentTime - lastTime) / drawInterval;
-            timer += (currentTime - lastTime);
+            long currentTime = System.nanoTime();
+            double deltaTime = (currentTime - lastTime) / 1000000000.0;
             lastTime = currentTime;
 
-            if (delta >= 1) {
-                if (currentScene != null){
-                    currentScene.OnUpdate(delta);
-                    for (GameObject obj : currentScene.gameObjects){
-                        obj.OnUpdate(delta);
-                    }
-                    Render(currentScene);
+            if (currentScene != null) {
+                currentScene.OnUpdate(deltaTime);
+                for (GameObject obj : currentScene.gameObjects) {
+                    obj.OnUpdate(deltaTime);
                 }
-                window.repaint();
-                delta--;
-                drawCount++;
-            }
-            
-            if (delta < 1) {
-                try {
-                    Thread.sleep(1); 
-                } catch (InterruptedException e) {}
+                Render(currentScene);
             }
 
-            if (timer >= 1000000000) {
-                //System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer = 0;
+            double frameTimeSeconds = 1.0 / TargetFPS;
+            while ((System.nanoTime() - lastTime) / 1000000000.0 < frameTimeSeconds) {
+                try {
+                    Thread.sleep(0);
+                } catch (InterruptedException e) {}
             }
         }
     }

@@ -6,6 +6,5 @@ public class Main {
         var renderer = new Renderer();
         renderer.Run();
         renderer.LoadScene(new TestScene());
-        // test
     }
 }

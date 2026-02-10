@@ -11,5 +11,6 @@ public class TestObject extends Sprite {
     @Override
     public void OnUpdate(double deltaTime){
         timer += deltaTime;
+        position.X -= deltaTime * 10;
     }
 }

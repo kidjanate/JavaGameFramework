@@ -6,7 +6,7 @@ import Valuables.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Player extends Sprite {
-    float PlayerSpeed = 5;
+    float PlayerSpeed = 300;
 
     Camera camera;
     public Player(Camera camera) {
@@ -21,20 +21,23 @@ public class Player extends Sprite {
 
     @Override
     public void OnUpdate(double deltaTime){
+        Vector2 moveDirection = new Vector2(0, 0);
         if (Input.GetKey(KeyEvent.VK_D)){
-            position.X += deltaTime * PlayerSpeed;
+            moveDirection.X += 1;
         }
         if (Input.GetKey(KeyEvent.VK_A)){
-            position.X -= deltaTime * PlayerSpeed;
+            moveDirection.X -= 1;
         }
         if (Input.GetKey(KeyEvent.VK_W)){
-            position.Y -= deltaTime * PlayerSpeed;
+            moveDirection.Y -= 1;
         }
         if (Input.GetKey(KeyEvent.VK_S)){
-            position.Y += deltaTime * PlayerSpeed;
+            moveDirection.Y += 1;
         }
+        moveDirection = Vector2.Normalized(moveDirection);
+        moveDirection = new Vector2(moveDirection.X * deltaTime * PlayerSpeed, moveDirection.Y * deltaTime * PlayerSpeed);
+        position = position.Add(moveDirection);
 
-        camera.position = Vector2.Lerp(camera.position, position, 0.1 * deltaTime);
-        System.out.println(camera.position);
+        camera.position = Vector2.Lerp(camera.position, position, 8 * deltaTime);
     }
 }
